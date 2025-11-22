@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-whiteboard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-whiteboard
+  namespace: ns-whiteboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-whiteboard
+  template:
+    metadata:
+      labels:
+        app: app-whiteboard
+    spec:
+      containers:
+      - name: pod-whiteboard
+        image: excalidraw/excalidraw:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-whiteboard
+  namespace: ns-whiteboard
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: app-whiteboard
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: virtualservice-whiteboard
+  namespace: ns-whiteboard
+spec:
+  hosts:
+  - "whiteboard.k8s.vpn"
+  gateways:
+  - istio-system/istio-ingressgateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: service-whiteboard
+        port:
+          number: 80
