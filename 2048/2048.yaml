@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 2048
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 2048-deployment
+  namespace: 2048
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 2048-app
+  template:
+    metadata:
+      labels:
+        app: 2048-app
+    spec:
+      containers:
+      - name: 2048-pod
+        image: alexwhen/docker-2048
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 2048-service
+  namespace: 2048
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: 2048-app
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: 2048-virtualservice
+  namespace: 2048
+spec:
+  hosts:
+  - "2048.k8s.vpn"
+  gateways:
+  - istio-system/istio-ingressgateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: 2048-service
+        port:
+          number: 80
