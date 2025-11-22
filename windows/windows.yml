@@ -103,7 +103,7 @@ spec:
       protocol: TCP
       targetPort: 5900
   selector:
-    app: windows
+    app: app-windows
   type: ClusterIP
 ---
 apiVersion: networking.istio.io/v1beta1
