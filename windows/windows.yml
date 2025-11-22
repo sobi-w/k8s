@@ -119,10 +119,10 @@ spec:
   http:
   - match:
     - uri:
-      prefix: "/"
+        prefix: "/"
     route:
     - destination:
-      host: service-windows
-      port:
-        number: 80
-    websocketUpgrade: true
+        host: service-windows
+        port:
+          number: 80
+      websocketUpgrade: true
