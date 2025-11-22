@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: pod-2048
-        image: alexwhen/docker-2048
+        image: evilroot/docker-2048
         ports:
         - containerPort: 80
 ---
