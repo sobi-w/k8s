@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: pod-kuard
-        image: dlneintr/kuard:0.0.1
+        image: dlneintr/kuard:0.2.0
         ports:
         - containerPort: 8080
 ---
