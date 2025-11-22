@@ -6,20 +6,20 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 2048-deployment
+  name: deployment-2048
   namespace: ns-2048
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: 2048-app
+      app: app-2048
   template:
     metadata:
       labels:
-        app: 2048-app
+        app: app-2048
     spec:
       containers:
-      - name: 2048-pod
+      - name: pod-2048
         image: alexwhen/docker-2048
         ports:
         - containerPort: 80
@@ -27,19 +27,19 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: 2048-service
+  name: service-2048
   namespace: ns-2048
 spec:
   ports:
   - port: 80
     targetPort: 80
   selector:
-    app: 2048-app
+    app: app-2048
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: 2048-virtualservice
+  name: virtualservice-2048
   namespace: ns-2048
 spec:
   hosts:
@@ -52,6 +52,6 @@ spec:
         prefix: "/"
     route:
     - destination:
-        host: 2048-service
+        host: service-2048
         port:
           number: 80
