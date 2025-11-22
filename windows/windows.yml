@@ -116,11 +116,13 @@ spec:
   - "windows.k8s.vpn"
   gateways:
   - istio-system/istio-ingressgateway
-  tcp:
+  http:
   - match:
-    - port: 80
+    - uri:
+      prefix: "/"
     route:
     - destination:
-        host: service-windows
-        port:
-          number: 80
+      host: service-windows
+      port:
+        number: 80
+    websocketUpgrade: true
