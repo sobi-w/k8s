@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kuard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuard-deployment
+  namespace: kuard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kuard-app
+  template:
+    metadata:
+      labels:
+        app: kuard-app
+    spec:
+      containers:
+      - name: kuard-pod
+        image: dlneintr/kuard:test3
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kuard-service
+  namespace: kuard
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: kuard-app
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kuard-virtualservice
+  namespace: kuard
+spec:
+  hosts:
+  - "kuard.k8s.vpn"
+  gateways:
+  - istio-system/istio-ingressgateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: kuard-service
+        port:
+          number: 80
