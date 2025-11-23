@@ -45,7 +45,7 @@ spec:
   hosts:
   - "kuard.k8s.vpn"
   gateways:
-  - istio-system/istio-ingressgateway
+  - istio-system/istio-ingress-gateway
   http:
   - match:
     - uri:
